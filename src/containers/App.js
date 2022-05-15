@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import "./App.css";
-import Person from "./Person/Person";
+import classes from "./App.css";
+import Persons from "../components/Persons/Persons";
+import Cockpit from "../components/Cockpit/Cockpit";
 
 const app = (props) => {
-  // the first argument is the state, the second the function used to modify it.
   const [personsState, setPersonsState] = useState({
     persons: [
       { name: "gaston", age: 23, id: 1 },
@@ -44,56 +44,25 @@ const app = (props) => {
     const doesShow = toggleListState.showPersons;
     toggleList({ showPersons: !doesShow });
   };
-
-  const style = {
-    backgroundColor: "green",
-    color: "white",
-    font: "inherit",
-    border: "1px solid blue",
-    padding: "8px",
-    cursor: "pointer",
-  };
-
   let persons = null;
 
-  // if showPersons is true maps the persons object and for its items create a Person component
   if (toggleListState.showPersons) {
     persons = (
-      <div>
-        {personsState.persons.map((person, index) => {
-          return (
-            <Person
-              click={() => deletePersonHandler(index)}
-              name={person.name}
-              age={person.age}
-              key={person.id}
-              changed={(event) => {
-                nameChangedHandler(event, person.id);
-              }}
-            />
-          );
-        })}
-      </div>
+      <Persons
+        persons={personsState.persons}
+        clicked={deletePersonHandler}
+        changed={nameChangedHandler}
+      ></Persons>
     );
-    style.backgroundColor = "grey";
-  }
-
-  // dynamically adding classes to an element.
-  let classes = [];
-  if (personsState.persons.length <= 2) {
-    classes.push("red");
-  }
-  if (personsState.persons.length <= 1) {
-    classes.push("bold");
   }
 
   return (
-    <div className="App">
-      <h1 className="App-title">Welcome to React</h1>
-      <p className={classes.join(" ")}>This is working</p>
-      <button style={style} onClick={showListHandler}>
-        Toggle Persons
-      </button>
+    <div className={classes.App}>
+      <Cockpit
+        showPersons={toggleListState.showPersons}
+        clicked={showListHandler}
+        persons={personsState.persons}
+      ></Cockpit>
       {persons}
     </div>
   );
